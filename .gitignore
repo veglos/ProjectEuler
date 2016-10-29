@@ -1,0 +1,3 @@
+*.dll
+[Dd]ebug/
+project.lock.json
