@@ -31,20 +31,90 @@ namespace ConsoleApplication
                 {01 ,70 ,54 ,71 ,83 ,51 ,54 ,69 ,16 ,92 ,33 ,48 ,61 ,43 ,52 ,01 ,89 ,19 ,67 ,48}
             };
 
+            //Console.WriteLine(grid.GetLength(0));
+            getLargestDiagonalSum(grid, 0);
         }
 
-        private static long getLargestHorizontalSum(long[][] grid, long adjacentNumbers)
+        private static long getLargestHorizontalSum(long[,] grid, long adjacentNumbers)
         {
-            return 0;
+            long largestSum = 0;
+            long candidate = 0;
+            for (long i = 0; i < grid.GetLength(0); i++)
+            {
+                for (long j = 0; j < grid.GetLength(1); j++)
+                {
+                    Console.Write(grid[i, j] + " ");
+                    /*if (i + adjacentNumbers < grid.Length)
+                    {
+                        for (long k = i; k < adjacentNumbers; k++)
+                        {
+                            candidate += grid[k, j];
+                        }
+
+                        if (candidate > largestSum)
+                        {
+                            largestSum = candidate;
+                        }
+
+                        candidate = 0;
+                    }*/
+                }
+                Console.WriteLine();
+            }
+            return largestSum;
         }
 
-        private static long getLargestVerticalSum(long[][] grid, long adjacentNumbers)
+        private static long getLargestVerticalSum(long[,] grid, long adjacentNumbers)
         {
-            return 0;
+            long largestSum = 0;
+            long candidate = 0;
+            for (long i = 0; i < grid.GetLength(0); i++)
+            {
+                for (long j = 0; j < grid.GetLength(1); j++)
+                {
+                    Console.Write(grid[j, i] + " ");
+                    /*if (i + adjacentNumbers < grid.Length)
+                    {
+                        for (long k = i; k < adjacentNumbers; k++)
+                        {
+                            candidate += grid[k, j];
+                        }
+
+                        if (candidate > largestSum)
+                        {
+                            largestSum = candidate;
+                        }
+
+                        candidate = 0;
+                    }*/
+                }
+                Console.WriteLine();
+            }
+            return largestSum;
         }
 
-        private long getLargestDiagonalSum(long[][] grid, long adjacentNumbers)
+        private static long getLargestDiagonalSum(long[,] grid, long adjacentNumbers)
         {
+            //top right triangle
+/*            for (long i = 0; i < grid.GetLength(0); i++)
+            {
+                for (long j = i; j < grid.GetLength(0); j++)
+                {
+                    Console.Write(grid[i, j] + " ");
+                }
+                Console.WriteLine();
+            }*/
+
+            //Bottom left triangle
+            for (long i = 0; i < grid.GetLength(0); i++)
+            {
+                for (long j = 0; j <= i; j++)
+                {
+                    Console.Write(grid[i,j] + " ");
+                }
+                Console.WriteLine();
+            }
+
             return 0;
         }
     }
