@@ -7,6 +7,7 @@ namespace ConsoleApplication
         public static void Main(string[] args)
         {
             long adjacentNumbers = 4;
+            long largestProduct = 0;
             long[,] grid = new long[,]
             {
                 {08 ,02 ,22 ,97 ,38 ,15 ,00 ,40 ,00 ,75 ,04 ,05 ,07 ,78 ,52 ,12 ,50 ,77 ,91 ,08},
@@ -31,91 +32,196 @@ namespace ConsoleApplication
                 {01 ,70 ,54 ,71 ,83 ,51 ,54 ,69 ,16 ,92 ,33 ,48 ,61 ,43 ,52 ,01 ,89 ,19 ,67 ,48}
             };
 
-            //Console.WriteLine(grid.GetLength(0));
-            getLargestDiagonalSum(grid, 0);
+            long largestHorizontalProduct = GetLargestHorizontalProduct(grid, adjacentNumbers);            
+            long largestVerticalProduct = GetLargestVerticalProduct(grid,adjacentNumbers);
+            long largestDiagonalProduct = GetLargestDiagonalProduct(grid,adjacentNumbers);
+
+            largestProduct = largestHorizontalProduct;
+            largestProduct = (largestVerticalProduct > largestProduct) ? largestVerticalProduct : largestProduct;
+            largestProduct = (largestDiagonalProduct > largestProduct) ? largestDiagonalProduct : largestProduct;
+
+            Console.WriteLine(largestProduct);
         }
 
-        private static long getLargestHorizontalSum(long[,] grid, long adjacentNumbers)
+        private static long GetLargestDiagonalProduct(long[,] grid, long adjacentNumbers)
         {
-            long largestSum = 0;
-            long candidate = 0;
+            long largestProduct = 0;
+            long candidate = 1;
+
+            //Top-left triangle 
+            /*  
+                i,j:
+                    19,0--18,1--17,2--16,3...
+                    18,0--17,1--16,2--15,3...
+                    17,0--16,1--15,2--14,3...
+            */
+            for (int k = grid.GetLength(0) - 1; k >= 0; k--)
+            {
+                for (int i = k, j = 0; i >= 0; i--, j++)
+                {
+                    if (i - adjacentNumbers >= 0)
+                    {
+
+                        for (int l = 0; l < adjacentNumbers; l++)
+                        {
+                            candidate *= grid[i - l, j + l];
+                        }
+
+                        if (candidate > largestProduct)
+                        {
+                            largestProduct = candidate;
+                        }
+
+                        candidate = 1;
+                    }
+                }
+            }            
+
+            //Bottom-right triangle
+            /*
+                i,j:
+                    19,0--18,1--17,2--16,3...
+                    19,1--18,2--17,3--16,4...
+                    19,2--18,3--17,4--16,5...
+            */
+            for (int k = 0; k < grid.GetLength(0); k++)
+            {
+                for (int i = grid.GetLength(0) - 1, j = k; j < grid.GetLength(1); i--, j++)
+                {
+                    if (j + adjacentNumbers - 1  < grid.GetLength(0))
+                    {
+
+                        for (int l = 0; l < adjacentNumbers; l++)
+                        {
+                            candidate *= grid[i - l, j + l];
+                        }
+
+                        if (candidate > largestProduct)
+                        {
+                            largestProduct = candidate;
+                        }
+
+                        candidate = 1;
+                    }
+                }
+            }
+
+            //Top-right triangle
+            /* 
+                i,j:
+                    0,0--1,1--2,2--3,3...
+                    0,1--1,2--2,3--3,4...
+                    0,2--1,3--2,4--3,5...
+            */
+            for (int k = 0; k < grid.GetLength(0); k++)
+            {
+                for (int i = 0, j = k; j < grid.GetLength(0); i++, j++)
+                {
+                    if (j + adjacentNumbers -1 < grid.GetLength(0))
+                    {
+
+                        for (int l = 0; l < adjacentNumbers; l++)
+                        {
+                            candidate *= grid[i + l, j + l];
+                        }
+
+                        if (candidate > largestProduct)
+                        {
+                            largestProduct = candidate;
+                        }
+
+                        candidate = 1;
+                    }
+                }
+            }
+
+            //Bottom-left triangle
+            /* 
+                i,j:
+                    0,0--1,1--2,2--3,3...
+                    1,0--2,1--3,2--4,3...
+                    2,0--3,1--4,2--5,3...
+            */
+            for (int k = 0; k < grid.GetLength(0); k++)
+            {
+                for (int i = k, j = 0; i < grid.GetLength(0); i++, j++)
+                {
+                    if (i + adjacentNumbers - 1 < grid.GetLength(0))
+                    {
+
+                        for (int l = 0; l < adjacentNumbers; l++)
+                        {
+                            candidate *= grid[i + l, j + l];
+                        }
+
+                        if (candidate > largestProduct)
+                        {
+                            largestProduct = candidate;
+                        }
+
+                        candidate = 1;
+                    }
+                }
+            }
+            return largestProduct;
+        }
+
+        private static long GetLargestHorizontalProduct(long[,] grid, long adjacentNumbers)
+        {
+            long largestProduct = 0;
+            long candidate = 1;
+
             for (long i = 0; i < grid.GetLength(0); i++)
             {
                 for (long j = 0; j < grid.GetLength(1); j++)
                 {
-                    Console.Write(grid[i, j] + " ");
-                    /*if (i + adjacentNumbers < grid.Length)
+                    if (j + adjacentNumbers - 1 < grid.GetLength(1))
                     {
-                        for (long k = i; k < adjacentNumbers; k++)
+                        for (long k = j; k < adjacentNumbers; k++)
                         {
-                            candidate += grid[k, j];
+                            candidate *= grid[i, k];
                         }
 
-                        if (candidate > largestSum)
+                        if (candidate > largestProduct)
                         {
-                            largestSum = candidate;
+                            largestProduct = candidate;
                         }
 
-                        candidate = 0;
-                    }*/
+                        candidate = 1;
+                    }
                 }
-                Console.WriteLine();
             }
-            return largestSum;
+
+            return largestProduct;
         }
 
-        private static long getLargestVerticalSum(long[,] grid, long adjacentNumbers)
+        private static long GetLargestVerticalProduct(long[,] grid, long adjacentNumbers)
         {
-            long largestSum = 0;
-            long candidate = 0;
+            long largestProduct = 0;
+            long candidate = 1;
+
             for (long i = 0; i < grid.GetLength(0); i++)
             {
                 for (long j = 0; j < grid.GetLength(1); j++)
                 {
-                    Console.Write(grid[j, i] + " ");
-                    /*if (i + adjacentNumbers < grid.Length)
+                    if (i + adjacentNumbers - 1 < grid.GetLength(0))
                     {
                         for (long k = i; k < adjacentNumbers; k++)
                         {
-                            candidate += grid[k, j];
+                            candidate *= grid[k, j];
                         }
 
-                        if (candidate > largestSum)
+                        if (candidate > largestProduct)
                         {
-                            largestSum = candidate;
+                            largestProduct = candidate;
                         }
 
-                        candidate = 0;
-                    }*/
+                        candidate = 1;
+                    }
                 }
-                Console.WriteLine();
-            }
-            return largestSum;
-        }
-
-        private static long getLargestDiagonalSum(long[,] grid, long adjacentNumbers)
-        {
-            //top right triangle
-/*            for (long i = 0; i < grid.GetLength(0); i++)
-            {
-                for (long j = i; j < grid.GetLength(0); j++)
-                {
-                    Console.Write(grid[i, j] + " ");
-                }
-                Console.WriteLine();
-            }*/
-
-            //Bottom left triangle
-            for (long i = 0; i < grid.GetLength(0); i++)
-            {
-                for (long j = 0; j <= i; j++)
-                {
-                    Console.Write(grid[i,j] + " ");
-                }
-                Console.WriteLine();
             }
 
-            return 0;
+            return largestProduct;
         }
     }
 }
