@@ -3,30 +3,38 @@ using System.Text;
 
 namespace ConsoleApplication
 {
-    /*
-    Problem: 2^15 = 32768 and the sum of its digits is 3+2+7+6+8 =26
-    What is the sum of the digits of the number 2^1000?
-    */
     public class Program
     {
         public static void Main(string[] args)
         {
             string a = "2";
-            string b = "2";            
+            int exponent = 1000;
+            string result = Exponentiate(a, exponent);
 
-            int power = 5;
+            Console.WriteLine("{0}^{1} = {2}", a, exponent, result);
 
-            string c = a;
-            for(int i=0;i<power;i++){
-                c = Multiply(c,b);
+            int sum = 0;
+            for (int i = 0; i < result.Length; i++)
+            {
+                sum += int.Parse(result[i].ToString());
             }
 
-            Console.WriteLine(c);
+            Console.WriteLine("sum of digits is {0}", sum);
+        }
+
+        private static string Exponentiate(string a, int exponent)
+        {
+            if (exponent == 0) return "1";
+            string c = a;
+            for (int i = 1; i < exponent; i++)
+            {
+                c = Multiply(c, a);
+            }
+            return c;
         }
 
         private static string Multiply(string a, string b)
         {
-
             string c = "0";
             for (string i = "0"; !i.Equals(b); i = Add(i, "1"))
             {
@@ -35,8 +43,16 @@ namespace ConsoleApplication
             return c;
         }
 
-        private static string Add(string number1, string number2)
+        private static string Add(string a, string b)
         {
+            string number1 = a;
+            string number2 = b;
+            if (a.Length < b.Length)
+            {
+                number1 = b;
+                number2 = a;
+            }
+
             int carry = 0;
             StringBuilder result = new StringBuilder();
             for (int i = number1.Length - 1, j = number2.Length - 1; i >= 0; i--, j--)
