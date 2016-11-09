@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace ConsoleApplication
 {
+    // Also solves problem 67
     public class Program
     {
         private static string filename = "triangle.txt";
