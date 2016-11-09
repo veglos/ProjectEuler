@@ -11,16 +11,63 @@ namespace ConsoleApplication
         public static void Main(string[] args)
         {
             int[][] triangle = GetTriangle(filename);
-            int sum = 0;
-            int position = 0;
+            int[] finalLine = GetLargestLine(triangle);
+            int largestNumber = GetLargestNumber(finalLine);
+            Console.WriteLine("The largest sum is {0}", largestNumber);
+        }
 
-            for (int i = 0; i < triangle.GetLength(0); i++)
+        private static int GetLargestNumber(int[] line)
+        {
+            int largestNumber = 0;
+            foreach (int number in line)
             {
-                sum += GetNextNumber(position, triangle[i]);
-                position = GetNewPosition(position, triangle[i]);
+                largestNumber = (number > largestNumber) ? number : largestNumber;
+            }
+            return largestNumber;
+        }
+
+        private static int[] GetLargestLine(int[][] triangle)
+        {
+
+            List<int> finalLine = InitializeFinalLine(triangle);
+
+            for (int i = 0; i < triangle.GetLength(0) - 1; i++)
+            {
+                //left arm
+                finalLine[0] = triangle[i + 1][0] + triangle[i][0];
+                //right arm
+                finalLine[i + 1] = triangle[i + 1][i + 1] + triangle[i][i];
+
+
+                for (int j = 1; j < triangle[i + 1].GetLength(0) - 1; j++)
+                {
+                    int leftCandidate = triangle[i + 1][j] + triangle[i][j - 1];
+                    int rightCandidate = triangle[i + 1][j] + triangle[i][j];
+                    finalLine[j] = (leftCandidate > rightCandidate) ? leftCandidate : rightCandidate;
+                }
+
+                triangle[i + 1] = finalLine.ToArray();
+
+                foreach (int number in triangle[i + 1])
+                {
+                    Console.Write(number + " ");
+                }
+                Console.WriteLine();
             }
 
-            Console.WriteLine(sum);
+            return finalLine.ToArray();
+        }
+
+        private static List<int> InitializeFinalLine(int[][] triangle)
+        {
+            List<int> finalLine = new List<int>(triangle[triangle.GetLength(0) - 1]);
+
+            for (int i = 0; i < finalLine.Count; i++)
+            {
+                finalLine[i] = 0;
+            }
+
+            return finalLine;
         }
 
         private static int[][] GetTriangle(string filename)
@@ -42,28 +89,6 @@ namespace ConsoleApplication
             }
 
             return triangle.ToArray();
-        }
-
-        private static int GetNewPosition(int lastposition, int[] line)
-        {
-            if (lastposition + 1 >= line.Length)
-            {
-                return lastposition;
-            }
-            int a = line[lastposition];
-            int b = line[lastposition + 1];
-            return (a > b) ? lastposition : ++lastposition;
-        }
-
-        private static int GetNextNumber(int position, int[] line)
-        {
-            if (position + 1 >= line.Length)
-            {
-                return line[position];
-            }
-            int a = line[position];
-            int b = line[position + 1];
-            return (a > b) ? a : b;
         }
     }
 }
