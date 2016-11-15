@@ -45,6 +45,44 @@ public class BigNumbers
         return ReverseNumber(result.ToString());
     }
 
+    private string Substract(string a, string b)
+    {
+        StringBuilder sb = new StringBuilder();
+        int borrow = 0;
+
+        int i, j;
+        for (i = a.Length - 1, j = b.Length - 1; j >= 0; i--, j--)
+        {
+            int n1 = int.Parse(a[i].ToString());
+            int n2 = int.Parse(b[j].ToString());
+            n1 -= borrow;
+
+            if (n1 == -1) n1 = 9;
+            if (n1 < n2)
+            {
+                borrow = 1;
+                sb.Append(n1 + 10 - n2);
+            }
+            else
+            {
+                borrow = 0;
+                sb.Append(n1 - n2);
+            }
+        }
+
+        while (i >= 0)
+        {
+            int n1 = int.Parse(a[i].ToString());
+            n1 -= borrow;
+            if (n1 == -1) n1 = 9;
+            if (borrow == 1) borrow = 0;
+            sb.Append(n1);
+            i--;
+        }
+
+        return ReverseNumber(sb.ToString());
+    }
+
     private string ReverseNumber(string number)
     {
         StringBuilder result = new StringBuilder();
