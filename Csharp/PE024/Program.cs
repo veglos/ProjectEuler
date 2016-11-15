@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace ConsoleApplication
 {
+    //WARNING: SLOW
     public class Program
     {
         public static void Main(string[] args)
